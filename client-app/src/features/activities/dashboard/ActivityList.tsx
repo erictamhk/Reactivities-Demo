@@ -4,8 +4,10 @@ import { Activity } from "../../../app/models/activity";
 
 export default function ActivityList({
   activities,
+  selectActivity,
 }: {
   activities: Activity[];
+  selectActivity: (id: string) => void;
 }) {
   return (
     <Segment>
@@ -22,7 +24,12 @@ export default function ActivityList({
                 </div>
               </Item.Description>
               <Item.Extra>
-                <Button floated="right" content="View" color="blue" />
+                <Button
+                  onClick={() => selectActivity(activity.id)}
+                  floated="right"
+                  content="View"
+                  color="blue"
+                />
                 <Label basic content={activity.category} />
               </Item.Extra>
             </Item.Content>
