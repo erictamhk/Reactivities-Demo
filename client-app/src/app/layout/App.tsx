@@ -64,8 +64,11 @@ function App() {
     setSubmitting(false);
   }
 
-  function handleDeleteActivity(id: string) {
+  async function handleDeleteActivity(id: string) {
+    setSubmitting(true);
+    await agent.Activities.delete(id);
     setActivities([...activities.filter((x) => x.id !== id)]);
+    setSubmitting(false);
   }
 
   if (loading)
