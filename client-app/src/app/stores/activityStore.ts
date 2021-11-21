@@ -65,6 +65,10 @@ export default class ActivityStore {
     ];
   };
 
+  deleteActivityToList = (id: string) => {
+    this.activities = [...this.activities.filter((x) => x.id !== id)];
+  };
+
   createActivity = async (activity: Activity) => {
     this.setLoading(true);
     try {
@@ -87,6 +91,18 @@ export default class ActivityStore {
       this.updateActivityToList(activity);
       this.selectActivity(activity.id);
       this.closeForm();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      this.setLoading(false);
+    }
+  };
+
+  deleteActivity = async (id: string) => {
+    this.setLoading(true);
+    try {
+      await agent.Activities.delete(id);
+      this.deleteActivityToList(id);
     } catch (error) {
       console.log(error);
     } finally {

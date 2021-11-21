@@ -3,15 +3,9 @@ import React, { SyntheticEvent, useState } from "react";
 import { Button, Item, Label, Segment } from "semantic-ui-react";
 import { useStore } from "../../../app/stores/store";
 
-function ActivityList({
-  deleteActivity,
-  submitting,
-}: {
-  deleteActivity: (id: string) => void;
-  submitting: boolean;
-}) {
+function ActivityList() {
   const { activityStore } = useStore();
-  const { activities, selectActivity } = activityStore;
+  const { activities, selectActivity, loading, deleteActivity } = activityStore;
 
   const [target, setTarget] = useState("");
 
@@ -46,7 +40,7 @@ function ActivityList({
                 />
                 <Button
                   name={activity.id}
-                  loading={submitting && target === activity.id}
+                  loading={loading && target === activity.id}
                   onClick={(e) => handleActivityDelete(e, activity.id)}
                   floated="right"
                   content="Delete"

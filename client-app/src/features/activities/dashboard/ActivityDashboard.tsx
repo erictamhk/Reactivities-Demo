@@ -6,20 +6,14 @@ import ActivityDetails from "../details/ActivityDetails";
 import ActivityForm from "../forms/ActivityForm";
 import ActivityList from "./ActivityList";
 
-function ActivityDashboard({
-  deleteActivity,
-  submitting,
-}: {
-  deleteActivity: (id: string) => void;
-  submitting: boolean;
-}) {
+function ActivityDashboard() {
   const { activityStore } = useStore();
   const { editMode, selectedActivity } = activityStore;
 
   return (
     <Grid>
       <Grid.Column width="10">
-        <ActivityList deleteActivity={deleteActivity} submitting={submitting} />
+        <ActivityList />
       </Grid.Column>
       <Grid.Column width="6">
         {selectedActivity && !editMode && <ActivityDetails />}
