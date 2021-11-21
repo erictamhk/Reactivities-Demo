@@ -67,6 +67,9 @@ export default class ActivityStore {
 
   deleteActivityToList = (id: string) => {
     this.activities = [...this.activities.filter((x) => x.id !== id)];
+    if (this.selectedActivity?.id === id) {
+      this.cancelSelectedActivity();
+    }
   };
 
   createActivity = async (activity: Activity) => {
