@@ -1,4 +1,3 @@
-import { v4 as uuid } from "uuid";
 import { makeAutoObservable } from "mobx";
 import agent from "../api/agent";
 import { Activity } from "../models/activity";
@@ -92,7 +91,6 @@ export default class ActivityStore {
   createActivity = async (activity: Activity) => {
     this.setLoading(true);
     try {
-      activity.id = uuid();
       await agent.Activities.create(activity);
       this.updateActivityToList(activity);
       this.selectActivity(activity.id);
