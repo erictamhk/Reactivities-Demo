@@ -21,17 +21,44 @@ export default class ActivityStore {
   }
 
   loadActivities = async () => {
+    this.setLoadingInitial(true);
     try {
       const activities = await agent.Activities.list();
       activities.forEach((activity) => {
-        activity.date = activity.date.split("T")[0];
-        this.activityRegistry.set(activity.id, activity);
+        this.setActivity(activity);
       });
     } catch (error) {
       console.log(error);
     } finally {
       this.setLoadingInitial(false);
     }
+  };
+
+  loadActivity = async (id: string) => {
+    let activity = this.getActivity(id);
+    if (activity) {
+      this.selectActivity(id);
+    } else {
+      this.setLoadingInitial(true);
+      try {
+        activity = await agent.Activities.details(id);
+        this.setActivity(activity);
+        this.selectActivity(id);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        this.setLoadingInitial(false);
+      }
+    }
+  };
+
+  private setActivity = (activity: Activity) => {
+    activity.date = activity.date.split("T")[0];
+    this.activityRegistry.set(activity.id, activity);
+  };
+
+  private getActivity = (id: string) => {
+    return this.activityRegistry.get(id);
   };
 
   setLoadingInitial = (state: boolean) => {
@@ -44,15 +71,6 @@ export default class ActivityStore {
 
   cancelSelectedActivity = () => {
     this.selectedActivity = undefined;
-  };
-
-  openForm = (id?: string) => {
-    id ? this.selectActivity(id) : this.cancelSelectedActivity();
-    this.editMode = true;
-  };
-
-  closeForm = () => {
-    this.editMode = false;
   };
 
   setLoading = (state: boolean) => {
@@ -77,7 +95,6 @@ export default class ActivityStore {
       await agent.Activities.create(activity);
       this.updateActivityToList(activity);
       this.selectActivity(activity.id);
-      this.closeForm();
     } catch (error) {
       console.log(error);
     } finally {
@@ -91,7 +108,6 @@ export default class ActivityStore {
       await agent.Activities.update(activity);
       this.updateActivityToList(activity);
       this.selectActivity(activity.id);
-      this.closeForm();
     } catch (error) {
       console.log(error);
     } finally {
